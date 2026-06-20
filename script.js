@@ -41,5 +41,63 @@ class Player{
             x: 0,
             y: 0
         };
+        
+        this.frame=0;
+        this.sprite={
+            stand:{
+                left: spriteStandLeft,
+                right: spriteStandRight,
+                cropWidth: 177,
+                width: 66* this.scale,
+            },
+            run:{
+                left: spriteRunLeft,
+                right: spriteRunRight,
+                cropWidth: 341,
+                width: 127.875*this.scale,
+            }
+        }
+
+        this.currentSprite=this.sprite.stand.right;
+        this.currentCropWidth = this.sprite.stand.cropWidth;
     }
+    draw(){
+        context.beginPath();
+
+        context.drawImage(
+            this.currentSprite,
+            this.currentCropWidth * this.frame,
+            0,
+            this.currentCropWidth,
+            400,
+           this.position.x,
+           this.position.x,
+           this.position.y,
+           this.width,
+           this.height
+        );
+ 
+        context.closePath();
+      }
+
+      update() {
+          this.frame++;
+            if (this.frame > 59 && (this.currentSprite === this.sprite.stand.right ||
+                 this.currentSprite === this.sprite.stand.left)) {
+                      this.frame = 0;
+                   } else if (this.frame>29&&(this.currentSprite === this.sprite.run.right ||
+                    this.currentSprite === this.sprite.run.left)) {
+                    this.frame = 0;
+                   } else {
+
+                   }
+
+                   this.draw();
+                   this.position.x+=this.velocity.x;
+                   this.position.y += this.velocity.y;
+
+                   if(this.position.y + this.height + this.velocity.y <= canvas.height){
+                    this.velocity.y += gravity;
+                   }
+      }
 }
