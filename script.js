@@ -26,7 +26,7 @@ const jumpSound = createAudio("audio/Jump.mp3");
 let speed = 2;
 let gravity = 0.5;
 
-class Player {
+class Player{
     constructor() {
         this.scale = 0.7;
         this.image = spriteStandRight;
@@ -41,7 +41,7 @@ class Player {
             x: 0,
             y: 0
         };
-
+        
         this.frame = 0;
         this.sprite = {
             stand: {
@@ -57,10 +57,11 @@ class Player {
                 width: 127.875 * this.scale,
             }
         }
-
+        
         this.currentSprite = this.sprite.stand.right;
         this.currentCropWidth = this.sprite.stand.cropWidth;
     }
+
     draw() {
         context.beginPath();
 
@@ -70,7 +71,6 @@ class Player {
             0,
             this.currentCropWidth,
             400,
-            this.position.x,
             this.position.x,
             this.position.y,
             this.width,
@@ -89,7 +89,7 @@ class Player {
             this.currentSprite === this.sprite.run.left)) {
             this.frame = 0;
         } else {
-
+            
         }
 
         this.draw();
@@ -102,8 +102,8 @@ class Player {
     }
 }
 
-class Platform {
-    constructor({ position, width }) {
+class Platform{
+    constructor({position , width}) {
         this.position = position;
         this.velocity = {
             x: 0,
@@ -154,13 +154,13 @@ let score;
 let userVolume = 1;
 
 
-function createPlatform(height) {
+function createPlatform(height){
     let randomWidth = Math.floor(Math.random() * widths.length);
     let positionX = Math.floor(Math.random() * (canvas.width - widths[randomWidth]))
     platforms.push(new Platform({
         position: {
             x: positionX, y: canvas.height - (height) - 50,
-        }, width: widths[ransomWidth]
+        },width: widths[randomWidth]
     }));
 }
 
@@ -195,8 +195,8 @@ function initGame() {
     scoreEl[0].innerHTML = score;
     backgroundSound.play();
     backgroundSound.volume = 0.3 * userVolume;
-
-    for (let i = 1; i < 50; i++) {
+    
+    for (let i = 1; i < 50; i++){
         createPlatform(i * 200);
     }
 }
@@ -207,7 +207,8 @@ function animate() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     player.update();
 
-    platformsforEach((platform, index) => {
+    platforms.forEach((platform, index) => {
+
 
         if (parallax && player.position.y < 50) {
             platform.velocity.y = speed + 2;
@@ -231,6 +232,133 @@ function animate() {
                     gravity += 0.1;
                 }
             }
+
+            if (parallax) {
+                player.velocity.y = speed;
+            } else {
+                player.velocity.y = 0;
+            }
+
+            jump = true;
         }
-    })
+
+        if (platform.position.y > canvas.height) {
+            platform.position.y = canvas.height - (platforms.length) * 200 - 50;
+        }
+
+        platform.update();
+    });
+    
+    if (player.position.y > canvas.height) {
+        scoreEl[1].innerHTML = score;
+        result.style.display = "block";
+        cancelAnimationFrame(animateID);
+    }
+
+
+    if (keys.right.pressed && player.position.x + player.width < canvas.width) {
+        player.velocity.x = speed * 2;
+    } else if (keys.left.pressed && player.position.x > 0) {
+        player.velocity.x = - speed * 2;
+    } else {
+        player.velocity.x = 0;
+    }
+
+    if(keys.up.pressed && jump === true) {
+        player.velocity.y = -15;
+        jumpSound.play();
+        jumpSound.volume = 0.3 * userVolume;
+        jump = false;
+    }
 }
+
+window.addEventListener("click", (e) => {
+    if(!soundSetting.contains(e.target) && !soundToggle.contains(e.target)){
+        soundSetting.style.display = "none";
+    }
+});
+
+soundToggle.addEventListener("click", () => {
+    if(soundSetting.style.display == "none")
+        soundSetting.style.display = "flex";
+    else
+        soundSetting.style.display = "none";
+});
+
+volumeRange.addEventListener("input", (e) => {
+    userVolume = e.target.value / 100;
+    backgroundSound.volume = 0.3 * userVolume;
+    jumpSound.volume = 0.3 * userVolume;
+
+    if(userVolume == 0){
+        soundimgs[0].classList.remove("active");
+        soundimgs[1].classList.add("active");
+    }else{
+        if(!soundimgs[0].classList.contains("active")){
+            soundimgs[0].classList.add("active");
+            soundimgs[1].classList.remove("active");
+        }
+    }
+});
+
+startGameBtn.addEventListener("click", () => {
+    result.style.display = "none";
+    initGame();
+    animate();
+});
+
+addEventListener("keydown", (event) => {
+    switch (event.key) {
+        case "ArrowUp":
+        case "w":
+        case " ":
+            keys.up.pressed = true;
+            break;
+        case "ArrowDown":
+        case "s":
+            keys.down.pressed = true;
+            break;
+        case "ArrowLeft":
+        case "d":
+            player.currentSprite = player.sprite.run.left;
+            player.currentCropWidth = player.sprite.run.cropWidth;
+            player.width = player.sprite.run.width;
+            keys.left.pressed = true;
+            break;
+        case "ArrowRight":
+        case "a":
+            player.currentSprite = player.sprite.run.right;
+            player.currentCropWidth = player.sprite.run.cropWidth;
+            player.width = player.sprite.run.width;
+            keys.right.pressed = true;
+            break;
+    }
+});
+
+addEventListener("keyup", (event) => {
+    switch (event.key) {
+        case "ArrowUp":
+        case "w":
+        case " ":
+            keys.up.pressed = false;
+            break;
+        case "ArrowDown":
+        case "s":
+            keys.down.pressed = false;
+            break;
+        case "ArrowLeft":
+        case "d":
+            player.currentSprite = player.sprite.stand.left;
+            player.currentCropWidth = player.sprite.stand.cropWidth;
+            player.width = player.sprite.stand.width;
+            keys.left.pressed = false;
+            break;
+        case "ArrowRight":
+        case "a":
+            player.currentSprite = player.sprite.stand.right;
+            player.currentCropWidth = player.sprite.stand.cropWidth;
+            player.width = player.sprite.stand.width;
+            keys.right.pressed = false;
+            break;
+    }
+});
