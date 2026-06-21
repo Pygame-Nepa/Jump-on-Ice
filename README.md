@@ -1,6 +1,6 @@
 # Jump-on-Ice
 
-A simple web game where you jump on ice platforms, go top , more top and Dont fall down.It is Made By Arpan Poudel.
+A simple web game where you jump on ice platforms, go top , more top and Don't fall down.It is Made By Arpan Poudel.
 
 ## Demo
 https://jump-on-icebyarpan.netlify.app/
