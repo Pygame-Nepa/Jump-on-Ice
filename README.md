@@ -17,5 +17,10 @@ https://jump-on-icebyarpan.netlify.app/
 - **JavaScript**
 
 ## Screenshots:
+<img width="1366" height="600" alt="image" src="https://github.com/user-attachments/assets/3e271182-febb-43b3-a332-4e74be543d42" />
+
+<img width="1366" height="601" alt="image" src="https://github.com/user-attachments/assets/752b0d65-d157-4e54-bdd2-2a155f9a8210" />
+
+<img width="1365" height="600" alt="image" src="https://github.com/user-attachments/assets/467ee526-80d3-42b2-ab7d-f3ae05fb1e0b" />
 
 ## Made by:Arpan Poudel.
